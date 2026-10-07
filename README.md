@@ -67,8 +67,6 @@ pytest -q
 
 ## Компонентная схема
 
-Исходник диаграммы также находится в [`architecture.mmd`](architecture.mmd), а HTML-версия — в [`architecture.html`](architecture.html).
-
 ```mermaid
 flowchart LR
     clients["CRM банка / веб-портал / мобильное приложение / внутренние сервисы / BI"]
