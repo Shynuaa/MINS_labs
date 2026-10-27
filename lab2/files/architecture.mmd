@@ -1,0 +1,35 @@
+flowchart LR
+    client["Клиент / Swagger UI"]
+
+    subgraph api["Agro Scoring API — FastAPI"]
+      middleware["Middleware: X-Request-ID<br/>X-Process-Time"]
+      routes["HTTP endpoints<br/>/predict, /batch-predict,<br/>/predict-queued, /predictions"]
+      validation["Pydantic + бизнес-валидация"]
+      inference["Модель агрориска<br/>single и batch inference"]
+      queue["asyncio.Queue<br/>dynamic batching + backpressure"]
+      llm["httpx.AsyncClient<br/>Vireonix LLM"]
+      errors["HTTP error handlers<br/>request_id в ответах"]
+    end
+
+    db[("SQLite<br/>aiosqlite / predictions")]
+    logs["Логи приложения"]
+    openapi["OpenAPI / Swagger<br/>/docs"]
+    provider["Vireonix API<br/>/v1/chat/completions"]
+
+    client --> middleware --> routes
+    routes --> validation --> inference
+    routes --> queue --> inference
+    routes --> llm --> provider
+    inference --> routes
+    routes <--> db
+    routes -. ошибки .-> errors
+    errors --> client
+    middleware -. request_id / latency .-> logs
+    routes -. API contract .-> openapi
+
+    classDef clientStyle fill:#e7f0ff,stroke:#5a84c4,color:#17212b
+    classDef serviceStyle fill:#edf8f0,stroke:#5b9b6b,color:#17212b
+    classDef storageStyle fill:#fff4df,stroke:#bd9448,color:#17212b
+    class client,provider clientStyle
+    class middleware,routes,validation,inference,queue,llm,errors serviceStyle
+    class db,logs,openapi storageStyle

@@ -1,0 +1,949 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+
+% Настройка полей
+\geometry{
+    a4paper,
+    left=2.5cm,
+    right=1.5cm,
+    top=2cm,
+    bottom=2cm
+}
+
+% Настройка заголовков
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% Настройка кода
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!40!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    frame=single,
+    captionpos=b,
+    showstringspaces=false,
+    tabsize=4
+}
+
+% Настройка колонтитулов
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Лабораторная работа №2: Развитие AI-сервиса}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \textbf{МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РОССИЙСКОЙ ФЕДЕРАЦИИ}
+        \vspace{0.5cm}
+
+        \textbf{Федерального государственного автономного образовательного учреждения \\ высшего образования}
+        \vspace{0.3cm}
+
+        \textbf{«НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ МИСИС»}
+        \vspace{2cm}
+
+
+        \textbf{Институт компьютерных наук}
+        \vspace{0.3cm}
+
+        \textbf{Кафедра Инженерной кибернетики}
+        \vspace{1cm}
+
+        \textbf{Лабораторная работа №2}
+        \vspace{0.3cm}
+
+        \textbf{по дисциплине «Современные интеллектуальные сетевые сервисы»}
+        \vspace{1.5cm}
+
+        \huge{\textbf{Развитие AI-сервиса: \\ сквозная идентификация запросов, \\ асинхронная обработка и интеграция LLM}}
+        \vspace{2cm}
+    \end{center}
+
+    \begin{flushright}
+        \textbf{Выполнил:} \\
+        Студент группы \\
+        И.О. Фамилия \\
+        \vspace{0.5cm}
+        \textbf{Проверил:} \\
+        Преподаватель \\
+        И.О. Фамилия \\
+        \vspace{2cm}
+        \textbf{Оценка:} \hrulefill
+    \end{flushright}
+
+    \begin{center}
+        \vfill
+        Москва, 2026
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Цель работы}
+
+Цель практической работы — развить ранее созданный REST API сервиса агроскоринга и приблизить его архитектуру к реальному промышленному AI-сервису.
+
+В ходе работы необходимо изучить и реализовать механизмы, которые возникают при эксплуатации сервиса: сквозную идентификацию запросов с помощью \texttt{request\_id}, использование промежуточных слоёв (middleware), управление очередью запросов и пакетным инференсом, хранение результатов в базе данных SQLite, асинхронное взаимодействие с внешними сервисами и подключение большой языковой модели через HTTP API.
+
+Последовательный поток обработки запроса представлен на рисунке~\ref{fig:flow}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth, keepaspectratio]{request_flow.png}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{request_flow.png}
+        \caption{Enter Caption}
+        \label{fig:placeholder}
+    \end{figure}
+        \caption{Обработка запроса в проектируемом API AI-сервиса агроскоринга}
+    \label{fig:flow}
+\end{figure}
+
+\section{Задачи работы}
+
+Стабильность API агроскоринга, спроектированного в лабораторной работе №1, обеспечивалась только контрактом (Pydantic-схемами данных). Теперь необходимо разработать набор механизмов, которые позволяют сервису работать под нагрузкой, переживать сбои и быть наблюдаемым.
+
+В ходе лабораторной работы №2 необходимо:
+
+\begin{enumerate}
+    \item Модифицировать существующий API агроскоринга таким образом, чтобы каждому HTTP-запросу назначался уникальный \texttt{request\_id}.
+    \item Реализовать промежуточный слой ПО middleware, который:
+    \begin{itemize}
+        \item принимает \texttt{X-Request-ID} от клиента;
+        \item при его отсутствии генерирует UUID (Universally Unique Identifier);
+        \item сохраняет идентификатор в контексте запроса;
+        \item возвращает его клиенту в HTTP-заголовке;
+        \item измеряет время обработки запроса.
+    \end{itemize}
+    \item Реализовать два режима инференса: одиночный и пакетный.
+    \item Организовать очередь запросов с использованием механизма \texttt{asyncio.Queue}.
+    \item Реализовать динамическое формирование пакета запросов (dynamic batching) — автоматическое объединение нескольких одиночных HTTP-запросов в один пакетный вызов модели.
+    \item Задать эксплуатационные ограничения: максимальный размер batch, максимальное время ожидания формирования batch, максимальный размер очереди, таймаут инференса.
+    \item Реализовать механизм управления потоком запросов (backpressure), при котором система, не успевающая обрабатывать входящие запросы, сигнализирует клиенту, что нужно снизить скорость отправки или временно прекратить отправку. В данном проекте достаточно вернуть клиенту корректный HTTP-код при переполнении очереди.
+    \item Подключить базу данных SQLite для постоянного хранения результатов прогнозирования.
+    \item Для асинхронной работы с SQLite использовать драйвер \texttt{aiosqlite}.
+    \item Реализовать: запись одиночного результата, пакетную запись результатов, чтение результатов, поиск по \texttt{request\_id}, пагинацию результатов.
+    \item Подключить внешнюю LLM через HTTP API.
+    \item Для асинхронного HTTP-вызова использовать \texttt{httpx.AsyncClient}.
+    \item Реализовать endpoint для непосредственного запроса к LLM.
+    \item Реализовать обработку ошибок внешних зависимостей: ошибка БД, таймаут модели, переполнение очереди, недоступность LLM, ошибка внешнего LLM API.
+    \item Протестировать разработанный сервис через Swagger UI и проанализировать полный путь одного запроса от клиента до модели, БД и внешней LLM.
+\end{enumerate}
+
+\section{Теоретическая часть}
+
+\subsection{Что такое request\_id}
+
+Если приложение небольшое, можно посмотреть на лог и примерно понять, какой запрос выполнялся. В нагруженной системе одновременно могут выполняться сотни запросов, их сообщения в журнале будут перемешаны. Поэтому каждому входящему HTTP-запросу назначается уникальный идентификатор: \texttt{request\_id}. Он используется для отслеживания конкретного HTTP-запроса на протяжении всего его пути через систему.
+
+Существуют два варианта создания \texttt{request\_id}:
+
+\begin{enumerate}
+    \item Клиент сам может передать \texttt{X-Request-ID} — вспомогательный опциональный заголовок HTTP, который содержит уникальный идентификатор запроса. Это удобно, если запрос проходит через несколько систем, например CRM, API Gateway, Database. Все системы могут использовать один идентификатор.
+    \item Если клиент его не передал, сервер создаёт свой:
+\end{enumerate}
+
+\begin{lstlisting}[caption={Генерация request\_id}]
+request_id = str(uuid.uuid4())
+\end{lstlisting}
+
+\subsection{Middleware}
+
+Чтобы не писать код генерации \texttt{request\_id} в каждом endpoint, можно использовать middleware.
+
+Middleware в FastAPI — это промежуточный слой (функция/класс), через который проходит каждый HTTP-запрос перед тем, как попасть в обработчик endpoint, и каждый ответ перед тем, как уйти клиенту. Это даёт единую точку для обработки ошибок, логирования и проверки аутентификации, а также позволяет гибко добавлять и менять компоненты без правок в ядре приложения.
+
+Middleware выполняется:
+
+\begin{enumerate}
+    \item до endpoint;
+    \item передаёт управление endpoint;
+    \item получает сформированный response;
+    \item может изменить response;
+    \item возвращает его клиенту.
+\end{enumerate}
+
+Например:
+
+\begin{lstlisting}[caption={Заготовка middleware}]
+@app.middleware("http")
+async def request_context_middleware(
+    request: Request,
+    call_next
+):
+    ...
+\end{lstlisting}
+
+Здесь \texttt{request} — входящий HTTP-запрос, а \texttt{call\_next(request)} — передача запроса следующему компоненту приложения.
+
+\subsubsection{Хранение данных в request.state}
+
+FastAPI позволяет сохранить информацию, относящуюся только к текущему запросу, для этого используют \texttt{request.state}. В него можно записывать произвольные данные, а затем читать их в разных частях приложения во время обработки одного и того же запроса.
+
+Обычно \texttt{request\_id} генерируется в middleware. Если в заголовке запроса уже есть \texttt{X-Request-ID}, используется оно. Если нет — генерируется новый UUID. Затем значение сохраняется в \texttt{request.state.request\_id}.
+
+\subsubsection{Измерение времени запроса}
+
+Middleware удобно использовать для измерения времени обработки:
+
+\begin{equation}
+T_{\text{request}} = t_{\text{response}} - t_{\text{request}}
+\end{equation}
+
+Например:
+
+\begin{lstlisting}[caption={Измерение времени обработки}]
+start_time = time.perf_counter()
+response = await call_next(request)
+process_time = time.perf_counter() - start_time
+\end{lstlisting}
+
+Получаем простейшую метрику latency.
+
+\subsection{Что такое batching}
+
+Батчинг (batching, или пакетная обработка) — метод повышения производительности за счёт сокращения количества отдельных вызовов модели, который представляет собой группирование нескольких похожих входных запросов в один общий вызов инференса. Существует два типа методов батчинга: статический и динамический.
+
+Batching позволяет уменьшить относительную стоимость некоторых фиксированных операций, например передачи данных, постпроцессинга, обмена данными между CPU и GPU. Поэтому batching часто увеличивает пропускную способность (throughput) — число обработанных объектов в единицу времени.
+
+\subsubsection{Explicit batching}
+
+Необходимо различать явный (explicit) и динамический (dynamic) batching.
+
+Explicit batching — это подход, при котором система явно управляет пакетной обработкой, то есть сама формирует пакеты запросов или операций и инициирует их выполнение.
+
+Сам клиент передаёт несколько объектов:
+
+\begin{lstlisting}[caption={Explicit batch-запрос}, language=Python]
+POST /batch-predict
+
+{
+    "items": [
+        {"farm_id": "FARM-001"},
+        {"farm_id": "FARM-002"},
+        {"farm_id": "FARM-003"}
+    ]
+}
+\end{lstlisting}
+
+Сервис сразу знает состав batch.
+
+\subsubsection{Dynamic batching}
+
+Dynamic batching, напротив, — это подход, при котором система автоматически формирует пакеты запросов на лету, адаптируясь к текущей нагрузке и условиям.
+
+Клиенты отправляют обычные одиночные запросы, они накапливаются в очереди, и когда система видит возможность сформировать пакет (достигнут определённый размер или прошло заданное время), она отправляет его на обработку.
+
+Таким образом, для клиента API запрос остаётся одиночным, а сервер самостоятельно оптимизирует вычисления.
+
+Dynamic batching оптимален там, где нагрузка неравномерна, а задержка ответа критична: онлайн-инференс, API-сервисы, чат-боты, LLM-серверы.
+
+\subsubsection{Очередь запросов}
+
+Для dynamic batching используется \texttt{asyncio.Queue}.
+
+\texttt{asyncio.Queue} — это асинхронная FIFO («первым пришёл — первым ушёл») очередь. Основные методы и особенности работы асинхронной очереди можно посмотреть в документации: \url{https://docs.python.org/3/library/asyncio-queue.html}.
+
+Для работы с очередью нужна специальная функция. Воркер (worker) — это долгоживущая корутина или процесс, который извлекает задачи из очереди и выполняет их. У worker много задач, но основная — пакетная обработка.
+
+\subsubsection{Формирование dynamic batch}
+
+Для пакетной обработки зададим два параметра:
+
+\begin{lstlisting}[caption={Параметры batch}]
+MAX_BATCH_SIZE = 8
+MAX_BATCH_WAIT_MS = 50
+\end{lstlisting}
+
+Worker начинает формировать пакет после первого запроса и запускает модель, если выполнено хотя бы одно условие:
+
+\begin{equation}
+\text{batch\_size} = \text{MAX\_BATCH\_SIZE}
+\quad \text{ИЛИ} \quad
+\text{время ожидания} \ge \text{MAX\_BATCH\_WAIT\_MS}
+\end{equation}
+
+Ожидание только наполнения пакета может значительно увеличить задержку (latency) при небольшой нагрузке.
+
+\subsection{Latency и throughput}
+
+При проектировании batching возникает компромисс между двумя показателями.
+
+Задержка (latency) — время обработки одного запроса:
+
+\begin{equation}
+\text{Latency} = t_{\text{response}} - t_{\text{request}}
+\end{equation}
+
+Пропускная способность (throughput) — число обработанных запросов за единицу времени:
+
+\begin{equation}
+\text{Throughput} = \frac{N}{T}
+\end{equation}
+
+Больший пакет позволяет повысить пропускную способность, но может увеличить задержку, поэтому достичь компромисса между этими двумя метриками — одна из основных инженерных задач при эксплуатации AI-сервисов.
+
+На практике этот компромисс управляется несколькими рычагами:
+
+\begin{itemize}
+    \item Максимальный размер батча (\texttt{MAX\_BATCH\_SIZE}) — верхняя граница, ограниченная объёмом памяти GPU и требованиями к латентности.
+    \item Окно ожидания (\texttt{MAX\_BATCH\_WAIT\_MS}/timeout) — сколько времени сервис готов ждать накопления батча, прежде чем отправить его на выполнение. Типичные значения — единицы или десятки миллисекунд.
+    \item Целевая латентность (SLO) — например, p95 или p99 времени ответа, под которую подстраивается размер батча.
+    \item Приоритизация запросов — возможность обрабатывать часть запросов вне очереди, если для них критична задержка.
+    \item Адаптивные стратегии — размер батча и окно ожидания динамически меняются в зависимости от текущей нагрузки, чтобы не перегружать GPU в пик и не простаивать в спад.
+\end{itemize}
+
+Итоговая задача инженера — найти такую конфигурацию, при которой сервис укладывается в заданные SLO по задержке и одновременно выжимает максимум из доступного железа.
+
+\subsection{Механизм управления потоком запросов backpressure}
+
+Предположим, модель обрабатывает 100 запросов/с, а клиенты отправляют 1000 запросов/с.
+
+Если очередь ничем не ограничена, тысячи задач могут накапливаться в памяти, это приводит к росту RAM, росту latency, таймаутам.
+
+Нужен механизм, ограничивающий очередь, например:
+
+\begin{lstlisting}[caption={Ограничение очереди}]
+QUEUE_MAX_SIZE = 100
+\end{lstlisting}
+
+Если очередь заполнена, новый запрос отклоняется.
+
+Система сообщает потребителю: «Сейчас я не могу принимать задачи быстрее, чем успеваю их обрабатывать».
+
+\subsection{FastAPI и асинхронность}
+
+FastAPI представляет собой решение для разработки API, опирающееся на асинхронную модель обработки запросов.
+
+Большинство AI-сервисов являются I/O-bound, они ждут ответов от внешних сервисов, поэтому библиотека \texttt{asyncio} — естественный выбор для таких сервисов.
+
+В основе \texttt{asyncio} — event loop (цикл событий). Это бесконечный цикл, который:
+
+\begin{enumerate}
+    \item Берёт задачу из очереди.
+    \item Выполняет её до первого \texttt{await}.
+    \item Отправляет задачу ждать результата.
+    \item Берёт следующую задачу из очереди.
+    \item Возвращается к ожидающим задачам, как только они получили данные.
+\end{enumerate}
+
+Корутина (coroutine) — это асинхронная функция, объявленная с \texttt{async def}. При вызове она возвращает объект корутины, который нужно запустить через событийный цикл. Это позволяет эффективно обслуживать множество одновременно ожидающих запросов (БД, сеть, файл, HTTP).
+
+\texttt{await} — точка ожидания, она сообщает событийному циклу: «дождись здесь результата, а пока переключись на другие задачи».
+
+В нашем приложении эндпоинты определяются как корутины.
+
+Одна из распространённых ошибок — пропуск \texttt{await} при вызове асинхронной функции. Python не сообщит об ошибке, а просто вернёт объект корутины вместо ожидаемого результата. Поэтому внутри async-функций всегда следует использовать \texttt{await}.
+
+Существуют высокоуровневые функции \texttt{asyncio.gather()}, \texttt{asyncio.wait()}, которые используются для запуска нескольких задач параллельно.
+
+\subsection{SQLite}
+
+SQLite — встраиваемая реляционная база данных.
+
+В отличие от PostgreSQL или MySQL для неё не требуется отдельный сервер. База хранится в файле \texttt{agro\_scoring.db}.
+
+В таблице \texttt{predictions} можно хранить, например: \texttt{request\_id}, \texttt{farm\_id}, \texttt{risk\_score}, \texttt{risk\_level}, \texttt{recommendation}, \texttt{model\_version}.
+
+Нельзя напрямую использовать СУБД \texttt{sqlite3} внутри \texttt{async def}, так как она имеет синхронный интерфейс.
+
+Например, \texttt{cursor.execute()}, \texttt{conn.commit()} являются блокирующими операциями. Если выполнить их непосредственно внутри \texttt{async def endpoint()}, то event loop будет занят до завершения операции.
+
+\texttt{aiosqlite} — это асинхронный драйвер для работы с базой данных SQLite в Python, построенный на основе стандартного модуля \texttt{sqlite3}.
+
+Подключение:
+
+\begin{lstlisting}[caption={Подключение к SQLite}]
+async with aiosqlite.connect("agro_scoring.db") as db:
+    ...
+\end{lstlisting}
+
+Выполнение SQL:
+
+\begin{lstlisting}[caption={Выполнение SQL}]
+await db.execute(...)
+\end{lstlisting}
+
+Фиксация транзакции:
+
+\begin{lstlisting}[caption={Фиксация транзакции}]
+await db.commit()
+\end{lstlisting}
+
+Чтение:
+
+\begin{lstlisting}[caption={Чтение одной строки}]
+row = await cursor.fetchone()
+\end{lstlisting}
+
+Использование \texttt{aiosqlite} делает программный интерфейс асинхронным, но не изменяет фундаментальные свойства самой SQLite. SQLite остаётся файловой БД и имеет ограничения по конкурентной записи.
+
+Будем переключать БД в режим конкурентной записи WAL (Write-Ahead Logging — журналирование с предварительной записью). В этом режиме читатели и писатели не блокируют друг друга: читатели видят согласованный снимок данных на момент начала транзакции, а писатель может продолжать работу, не дожидаясь завершения чтения.
+
+\subsubsection{Параметризованные SQL-запросы}
+
+Данные пользователя не следует подставлять в SQL через f-строку:
+
+\begin{lstlisting}[caption={Небезопасный SQL}]
+f"""
+SELECT *
+FROM predictions
+WHERE request_id = '{request_id}'
+"""
+\end{lstlisting}
+
+Правильный вариант:
+
+\begin{lstlisting}[caption={Параметризованный SQL}]
+await db.execute(
+    """
+    SELECT *
+    FROM predictions
+    WHERE request_id = ?
+    """,
+    (request_id,)
+)
+\end{lstlisting}
+
+Такой запрос называется параметризованным. Он безопаснее, правильно экранирует строки, снижает риск SQL-инъекций, корректнее работает с типами.
+
+\subsubsection{Транзакция и commit}
+
+SQL-команда \texttt{INSERT INTO} сама по себе ещё не означает гарантированное сохранение результата. После записи необходимо выполнить:
+
+\begin{lstlisting}[caption={Фиксация одиночной записи}]
+await db.commit()
+\end{lstlisting}
+
+Для пакетной обработки можно использовать:
+
+\begin{lstlisting}[caption={Пакетная запись}]
+await db.executemany(...)
+await db.commit()
+\end{lstlisting}
+
+В этом случае несколько записей сохраняются одной транзакцией, это эффективнее, чем выполнять отдельный \texttt{commit()} после каждого элемента пакета.
+
+\subsubsection{Пагинация}
+
+Пагинация — это способ отдавать данные порциями, а выбор конкретного метода — компромисс между удобством навигации и производительностью на больших объёмах.
+
+Мы будем использовать offset-пагинацию. Offset-пагинация (она же \texttt{LIMIT \dots\ OFFSET}) — самый простой и исторически первый способ постраничного вывода данных. Идея проста: чтобы получить N-ю страницу, мы пропускаем $(N-1) \cdot \text{page\_size}$ записей и берём следующие \texttt{page\_size}.
+
+Чтобы продемонстрировать механизм пагинации в нашем приложении, мы будем возвращать одну страницу прогнозов для выбранного дня недели.
+
+\subsection{Подключение внешней LLM}
+
+После получения результата агроскоринга его можно дополнительно объяснить естественным языком.
+
+Например:
+
+\begin{lstlisting}[caption={Пример результата}]
+risk_score = 0.9
+risk_level = high
+\end{lstlisting}
+
+может быть преобразовано в: «Полученная оценка соответствует высокой категории риска. Результат требует дополнительной проверки оператором в соответствии с правилами банка».
+
+Для этого наш FastAPI-сервис выступает уже не только как сервер, но одновременно как HTTP-клиент другого API.
+
+\subsubsection{OpenAI-совместимый формат LLM API}
+
+Будем использовать Vireonix API, не требует авторизации, предоставляет бесплатные токены модели \texttt{auto} по API:
+
+\begin{lstlisting}[caption={Endpoint LLM}]
+POST /v1/chat/completions
+\end{lstlisting}
+
+Запрос имеет типовую структуру:
+
+\begin{lstlisting}[caption={Структура запроса к LLM}]
+{
+    "model": "auto",
+    "messages": [
+        {
+            "role": "system",
+            "content": "..."
+        },
+        {
+            "role": "user",
+            "content": "..."
+        }
+    ]
+}
+\end{lstlisting}
+
+\subsubsection{httpx.AsyncClient}
+
+AI-сервис — это прежде всего множество HTTP-вызовов: к LLM API, к инструментам поиска, к внешним сервисам. Их нужно организовывать асинхронно, с повторными попытками вызова и таймаутами. Поэтому вместо синхронного \texttt{requests} мы возьмём \texttt{httpx.AsyncClient} — асинхронный HTTP-клиент из библиотеки HTTPX.
+
+Все методы клиента (\texttt{get}, \texttt{post}, \texttt{put}, \texttt{delete} и другие) являются асинхронными. Чтобы их вызвать, нужно использовать ключевое слово \texttt{await}. Например:
+
+\begin{lstlisting}[caption={Асинхронный вызов}]
+response = await client.post(...)
+\end{lstlisting}
+
+Создание нового \texttt{httpx.AsyncClient()} для каждого HTTP-запроса возможно, но не оптимально. Лучше создать один клиент при старте приложения и закрыть при остановке.
+
+\subsection{Работа с ошибками внешних компонентов}
+
+Когда API начинает зависеть от других систем, появляются новые категории ошибок.
+
+\begin{longtable}{|p{2.5cm}|p{10.5cm}|}
+\caption{HTTP-коды ошибок внешних компонентов}
+\label{tab:errors}\\
+\hline
+\textbf{HTTP-код} & \textbf{Ситуация} \\
+\hline
+\endfirsthead
+\hline
+\textbf{HTTP-код} & \textbf{Ситуация} \\
+\hline
+\endhead
+400 & нарушение бизнес-правил \\
+404 & прогноз не найден \\
+422 & ошибка Pydantic \\
+429 & очередь переполнена \\
+500 & необработанная внутренняя ошибка \\
+502 & внешний LLM API вернул некорректный ответ \\
+503 & БД, модель или внешний сервис недоступны \\
+504 & превышен timeout инференса или LLM \\
+\hline
+\end{longtable}
+
+Если наш FastAPI работает корректно, но внешний LLM-провайдер отвечает ошибкой, наш сервис выполняет роль посредника и 502 Bad Gateway лучше отражает причину сбоя.
+
+Чтобы зависший внешний сервис не удерживал ресурсы приложения, необходимо установить таймаут:
+
+\begin{lstlisting}[caption={Таймаут LLM}]
+LLM_TIMEOUT_SECONDS = 60.0
+\end{lstlisting}
+
+Если ответ не получен вовремя, то обработчик выдаст ошибку 504 Gateway Timeout.
+
+\subsection{Lifespan в FastAPI}
+
+Lifespan — это механизм, который позволяет (особенно в асинхронной среде) централизованно инициализировать и закрывать подключения к базе данных, кэшу или внешним API.
+
+\section{Задания}
+
+\subsection{Задание 1. Реализуйте сквозной request\_id}
+
+Модифицируйте приложение таким образом, чтобы каждый HTTP-запрос имел уникальный идентификатор.
+
+Требования:
+
+\begin{enumerate}
+    \item Если клиент передал \texttt{X-Request-ID} — использовать его.
+    \item Если \texttt{X-Request-ID} отсутствует — сгенерировать UUID.
+    \item Сохранить идентификатор в \texttt{request.state.request\_id}.
+\end{enumerate}
+
+Пример заголовка:
+
+\begin{lstlisting}[caption={Пример заголовка}]
+X-Request-ID: 23f3f05c-5a0f-432c-a91f-f8b5011f8840
+\end{lstlisting}
+
+Проверьте, что \texttt{request\_id} присутствует:
+
+\begin{itemize}
+    \item в теле результата \texttt{/predict};
+    \item в логах;
+    \item в HTTP response headers;
+    \item в записях SQLite.
+\end{itemize}
+
+\subsection{Задание 2. Реализуйте промежуточный слой (middleware)}
+
+Добавьте middleware FastAPI, которое должно: получить HTTP-запрос, получить/создать \texttt{request\_id}, записать время начала, выполнить endpoint, рассчитать время обработки, добавить headers, сформировать HTTP-ответ, который содержит \texttt{X-Request-ID}, \texttt{X-Process-Time}.
+
+Проверьте через Swagger: сравните \texttt{X-Process-Time} для \texttt{/health}, \texttt{/predict} и \texttt{/predict-with-llm}.
+
+\subsection{Задание 3. Добавьте обработку ошибок API}
+
+Реализуйте обработку ошибок:
+
+\begin{itemize}
+    \item 400 — нарушение бизнес-правил;
+    \item 404 — результат не найден;
+    \item 409 — неоднозначный результат для batch request\_id;
+    \item 422 — ошибка Pydantic;
+    \item 429 — очередь переполнена;
+    \item 500 — внутренняя ошибка приложения;
+    \item 502 — ошибка внешнего LLM-провайдера;
+    \item 503 — модель, БД или внешний сервис недоступны;
+    \item 504 — timeout.
+\end{itemize}
+
+Ответ с ошибкой должен содержать \texttt{request\_id}, если запрос уже прошёл через middleware.
+
+Пример:
+
+\begin{lstlisting}[caption={Пример ответа с ошибкой}]
+{
+    "detail": "Prediction storage is unavailable",
+    "request_id": "..."
+}
+\end{lstlisting}
+
+\subsection{Задание 4. Подключите SQLite через aiosqlite}
+
+Создайте БД \texttt{agro\_scoring.db}. И таблицу \texttt{predictions} с полями: \texttt{id}, \texttt{request\_id}, \texttt{farm\_id}, \texttt{risk\_score}, \texttt{risk\_level}, \texttt{recommendation}, \texttt{model\_version}, \texttt{source}, \texttt{created\_at}.
+
+\textbf{Ответьте:} почему блокирующий \texttt{sqlite3.execute()} нежелателен внутри асинхронного FastAPI endpoint?
+
+\subsection{Задание 5. Сохраните результат /predict в SQLite}
+
+Модифицируйте \texttt{POST /predict} так, чтобы после расчёта \texttt{risk\_score}, \texttt{risk\_level} и \texttt{recommendation} результат сохранялся в БД.
+
+Клиент получает «200 OK» только после успешного сохранения результата.
+
+\subsection{Задание 6. Реализуйте чтение прогнозов из БД}
+
+\begin{itemize}
+    \item \texttt{GET /predictions}
+    \item \texttt{GET /predictions/\{request\_id\}}
+    \item \texttt{GET /requests/\{request\_id\}/predictions}
+\end{itemize}
+
+\texttt{GET /predictions} должен получать историю из SQLite, а не из словаря Python.
+
+\texttt{GET /predictions/\{request\_id\}} должен:
+
+\begin{itemize}
+    \item вернуть прогноз при наличии одной записи;
+    \item вернуть 404, если запись отсутствует;
+    \item вернуть 409, если \texttt{request\_id} связан с batch и содержит несколько predictions.
+\end{itemize}
+
+Для batch-запроса используйте \texttt{GET /requests/\{request\_id\}/predictions}.
+
+\subsection{Задание 7. Реализуйте пагинацию результатов}
+
+Создайте endpoint:
+
+\begin{lstlisting}[caption={Пагинация по дню недели}]
+GET /predictions/by-weekday
+\end{lstlisting}
+
+с параметрами: \texttt{weekday}, \texttt{page}, \texttt{per\_page}.
+
+Пример:
+
+\begin{lstlisting}[caption={Пример запроса}]
+GET /predictions/by-weekday?weekday=monday&page=1&per_page=5
+\end{lstlisting}
+
+Endpoint должен вернуть первые пять записей понедельника и метаинформацию:
+
+\begin{lstlisting}[caption={Пример ответа пагинации}]
+{
+    "data": [],
+    "meta": {
+        "weekday": "monday",
+        "current_page": 1,
+        "per_page": 5,
+        "total_pages": 4,
+        "total_items": 18,
+        "next_page": "...",
+        "prev_page": null
+    }
+}
+\end{lstlisting}
+
+\subsection{Задание 8. Реализуйте явный пакетный инференс (explicit batch inference)}
+
+Создайте:
+
+\begin{lstlisting}[caption={Explicit batch endpoint}]
+POST /batch-predict
+\end{lstlisting}
+
+Endpoint должен принимать несколько объектов \texttt{FarmRequest}:
+
+\begin{lstlisting}[caption={Тело batch-запроса}]
+{
+    "items": [
+        {"farm_id": "FARM-001", "...": "..."},
+        {"farm_id": "FARM-002", "...": "..."},
+        {"farm_id": "FARM-003", "...": "..."}
+    ]
+}
+\end{lstlisting}
+
+Ограничьте размер списка:
+
+\begin{lstlisting}[caption={Ограничение размера batch}]
+MAX_BATCH_SIZE = 8
+\end{lstlisting}
+
+Пакет должен обрабатываться одним вызовом \texttt{model\_predict\_batch(...)}, а результаты сохраняться в SQLite одной транзакцией:
+
+\begin{lstlisting}[caption={Пакетное сохранение}]
+await db.executemany(...)
+await db.commit()
+\end{lstlisting}
+
+\textbf{Ответьте:} почему один \texttt{executemany()} предпочтительнее восьми отдельных \texttt{INSERT + COMMIT}?
+
+\subsection{Задание 9. Реализуйте очередь и динамическую пакетную обработку (dynamic batching)}
+
+Создайте \texttt{asyncio.Queue} и endpoint:
+
+\begin{lstlisting}[caption={Dynamic batching endpoint}]
+POST /predict-queued
+\end{lstlisting}
+
+Клиент по-прежнему должен отправлять один объект, однако сервер должен помещать его в очередь
+Worker должен: получить первый запрос, начать формировать batch, при достижении \texttt{MAX\_BATCH\_SIZE} (или истечении \texttt{MAX\_BATCH\_WAIT\_MS}) вызвать модель.
+
+Используйте:
+
+\begin{lstlisting}[caption={Параметры dynamic batching}]
+MAX_BATCH_SIZE = 8
+MAX_BATCH_WAIT_MS = 50
+\end{lstlisting}
+
+и объект \texttt{Future}, чтобы вернуть соответствующему запросу именно его результат.
+
+\subsection{Задание 10. Реализуйте управление потоком запросов backpressure}
+
+Размер очереди ограничен:
+
+\begin{lstlisting}[caption={Ограничение очереди}]
+QUEUE_MAX_SIZE = 100
+\end{lstlisting}
+
+Если очередь заполнена, endpoint должен вернуть \textbf{429 Too Many Requests}.
+
+Добавьте:
+
+\begin{lstlisting}[caption={Endpoint /queue-status}]
+GET /queue-status
+\end{lstlisting}
+
+Endpoint должен возвращать:
+
+\begin{lstlisting}[caption={Ответ /queue-status}]
+{
+    "queue_size": 4,
+    "queue_max_size": 100,
+    "max_batch_size": 8,
+    "max_batch_wait_ms": 50,
+    "inference_timeout_seconds": 2.0
+}
+\end{lstlisting}
+
+\textbf{Ответьте:} что произойдёт с памятью и latency, если очередь сделать неограниченной?
+
+\subsection{Задание 11. Реализуйте timeout инференса}
+
+Для ограничения времени выполнения модели используйте \texttt{asyncio.wait\_for(...)} и \texttt{INFERENCE\_TIMEOUT\_SECONDS}.
+
+\begin{lstlisting}[caption={Таймаут инференса}]
+result = await asyncio.wait_for(
+    model_predict(data),
+    timeout=INFERENCE_TIMEOUT_SECONDS
+)
+\end{lstlisting}
+
+При превышении времени вернуть \textbf{504 Gateway Timeout}.
+
+Протестируйте изменение:
+
+\begin{lstlisting}[caption={Тестовое значение таймаута}]
+INFERENCE_TIMEOUT_SECONDS = 0.001
+\end{lstlisting}
+
+и зафиксируйте результат.
+
+\subsection{Задание 12. Подключите внешнюю LLM}
+
+Подключите Vireonix (без API-ключа и авторизации) через OpenAI-совместимый endpoint:
+
+\begin{lstlisting}[caption={Endpoint LLM}]
+POST https://vireonix.ai/v1/chat/completions
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Параметры LLM}]
+LLM_BASE_URL = "https://vireonix.ai/v1"
+LLM_MODEL = "auto"
+\end{lstlisting}
+
+\subsection{Задание 13. Реализуйте POST /llm/chat}
+
+Создайте endpoint:
+
+\begin{lstlisting}[caption={Endpoint /llm/chat}]
+POST /llm/chat
+\end{lstlisting}
+
+Принимать:
+
+\begin{lstlisting}[caption={Тело запроса /llm/chat}]
+{
+    "prompt": "Объясни, что такое агроскоринг",
+    "model": "auto",
+    "temperature": 0.3,
+    "max_tokens": 300
+}
+\end{lstlisting}
+
+Ответ должен содержать: \texttt{request\_id}, \texttt{requested\_model}, \texttt{returned\_model}, \texttt{answer}, \texttt{finish\_reason}, \texttt{latency\_ms}.
+
+Проверьте endpoint через Swagger.
+
+\subsection{Задание 14. Реализуйте /predict-with-llm}
+
+Создайте endpoint:
+
+\begin{lstlisting}[caption={Endpoint /predict-with-llm}]
+POST /predict-with-llm
+\end{lstlisting}
+
+LLM не должна изменять \texttt{risk\_score} и \texttt{risk\_level}. Она должна только сформировать текстовое объяснение результата.
+
+\subsection{Задание 15. Проведите тестирование API}
+
+Заполните следующую таблицу.
+
+\begin{longtable}{|c|p{5.2cm}|c|c|c|}
+\caption{Таблица тест-кейсов с ожидаемыми HTTP-кодами}
+\label{tab:test_cases}\\
+\hline
+\textbf{№} & \textbf{Запрос} & \textbf{Ожидаемый HTTP-код} & \textbf{Полученный код} & \textbf{Результат} \\
+\hline
+\endfirsthead
+\hline
+\textbf{№} & \textbf{Запрос} & \textbf{Ожидаемый HTTP-код} & \textbf{Полученный код} & \textbf{Результат} \\
+\hline
+\endhead
+1  & GET /health & 200 & & \\
+2  & корректный POST /predict & 200 & & \\
+3  & area\_ha = -100 & 422 & & \\
+4  & неизвестный регион & 400 & & \\
+5  & существующий request\_id & 200 & & \\
+6  & неизвестный request\_id & 404 & & \\
+7  & корректный POST /batch-predict & 200 & & \\
+8  & batch больше MAX\_BATCH\_SIZE & 422 & & \\
+9  & POST /predict-queued & 200 & & \\
+10 & переполненная очередь & 429 & & \\
+11 & GET /predictions/by-weekday?page=1\&per\_page=5 & 200 & & \\
+12 & page = -1 & 422 & & \\
+13 & неизвестный weekday & 400 & & \\
+14 & корректный POST /llm/chat & 200 & & \\
+15 & недоступный LLM / provider error & 502/503/504 & & \\
+16 & корректный POST /predict-with-llm & 200 & & \\
+\hline
+\end{longtable}
+
+\subsection{Задание 16. Проанализируйте API как контракт}
+
+Заполните таблицу для основных endpoints.
+
+\begin{longtable}{|p{3.2cm}|p{1.4cm}|p{2.4cm}|p{3cm}|p{1.2cm}|p{2.4cm}|}
+\caption{Таблица API-контракта}
+\label{tab:api_contract}\\
+\hline
+\textbf{Endpoint} & \textbf{Method} & \textbf{Input} & \textbf{Output} & \textbf{Success} & \textbf{Возможные ошибки} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Endpoint} & \textbf{Method} & \textbf{Input} & \textbf{Output} & \textbf{Success} & \textbf{Возможные ошибки} \\
+\hline
+\endhead
+/health & GET & --- & status & 200 & 500 \\
+/predict & POST & FarmRequest & PredictionResponse & 200 & 400, 422, 503, 504 \\
+/batch-predict & POST & BatchRequest & BatchPredictionResponse & 200 & 400, 422, 503, 504 \\
+/predict-queued & POST & FarmRequest & PredictionResponse & 200 & 400, 422, 429, 503, 504 \\
+/predictions & GET & query & list & 200 & 400, 422, 503 \\
+/predictions/by-weekday & GET & weekday, page, per\_page & paginated response & 200 & 400, 404, 422 \\
+/llm/chat & POST & LLMChatRequest & LLMChatResponse & 200 & 422, 502, 503, 504 \\
+/predict-with-llm & POST & FarmRequest & PredictWithLLMResponse & 200 & 400, 422, 502, 503, 504 \\
+\hline
+\end{longtable}
+
+\section{Требования к отчёту}
+
+Отчёт должен содержать:
+
+\begin{enumerate}
+    \item Цель работы.
+    \item Краткое описание расширенной архитектуры AI-сервиса.
+    \item Ссылку на исходный код.
+    \item Скриншот Swagger UI.
+    \item Скриншот POST /predict.
+    \item Скриншот записи результата в SQLite или ответа GET /predictions.
+    \item Скриншот POST /batch-predict.
+    \item Скриншот GET /queue-status.
+    \item Скриншот пагинации по дню недели.
+    \item Скриншот POST /llm/chat.
+    \item Скриншот POST /predict-with-llm.
+    \item Таблицу тест-кейсов.
+    \item Таблицу API-контракта.
+    \item Краткий вывод о назначении \texttt{request\_id}, batching, backpressure, БД и LLM в составе AI-сервиса.
+\end{enumerate}
+
+\section{Критерии оценки}
+
+\begin{longtable}{|p{11cm}|c|}
+\caption{Критерии оценки}
+\label{tab:criteria}\\
+\hline
+\textbf{Критерий} & \textbf{Баллы} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Критерий} & \textbf{Баллы} \\
+\hline
+\endhead
+Приложение запускается, Swagger/OpenAPI доступны & 5 \\
+Реализован middleware с request\_id и X-Process-Time & 10 \\
+request\_id проходит через обработку запроса, логирование и БД & 5 \\
+SQLite подключена через aiosqlite и await & 10 \\
+/predict сохраняет результат в SQLite & 5 \\
+Реализовано чтение результатов и поиск по request\_id & 5 \\
+Реализована пагинация LIMIT/OFFSET + COUNT(*) & 10 \\
+Реализован explicit batching /batch-predict & 10 \\
+Реализована очередь asyncio.Queue и dynamic batching & 10 \\
+Реализованы backpressure и timeout & 5 \\
+Реализован /queue-status и наблюдаемость очереди & 5 \\
+Реализовано асинхронное подключение LLM через httpx.AsyncClient & 5 \\
+Реализован /llm/chat & 5 \\
+Реализован /predict-with-llm с разделением scoring и explanation & 5 \\
+Проведено тестирование и заполнена таблица API-контракта & 5 \\
+\hline
+\textbf{Итого} & \textbf{100} \\
+\hline
+\end{longtable}
+
+\end{document}
