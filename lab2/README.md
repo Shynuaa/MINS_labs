@@ -1,4 +1,4 @@
-# Практическая работа №1 — Agro Scoring API
+# Практическая работа №2 — Agro Scoring API
 
 Расширение исходного FastAPI-сервиса агроскоринга: сквозной `request_id`, асинхронная SQLite, одиночный и пакетный инференс, очередь с dynamic batching и backpressure, пагинация, обработка ошибок и интеграция с Vireonix LLM.
 
@@ -75,4 +75,4 @@ python -m pytest -v
 - `agro_api/main.py` — расширенный FastAPI-сервис и маршруты.
 - `agro_api/model.py`, `services.py`, `schemas.py`, `storage.py` — модули исходной реализации; расширенная версия сервиса содержит собственные схемы и асинхронный SQLite storage в `main.py`.
 - `tests/test_api.py` — базовые тесты исходного API.
-- `files/` — материалы предыдущей лабораторной работы.
+- `files/` — материалы практической работы.
