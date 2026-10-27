@@ -1,0 +1,1316 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\subsubsection{МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РОССИЙСКОЙ
+ФЕДЕРАЦИИ}\label{ux43cux438ux43dux438ux441ux442ux435ux440ux441ux442ux432ux43e-ux43dux430ux443ux43aux438-ux438-ux432ux44bux441ux448ux435ux433ux43e-ux43eux431ux440ux430ux437ux43eux432ux430ux43dux438ux44f-ux440ux43eux441ux441ux438ux439ux441ux43aux43eux439-ux444ux435ux434ux435ux440ux430ux446ux438ux438}
+
+\subsubsection{Федерального государственного автономного
+образовательного учреждения высшего
+образования}\label{ux444ux435ux434ux435ux440ux430ux43bux44cux43dux43eux433ux43e-ux433ux43eux441ux443ux434ux430ux440ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux430ux432ux442ux43eux43dux43eux43cux43dux43eux433ux43e-ux43eux431ux440ux430ux437ux43eux432ux430ux442ux435ux43bux44cux43dux43eux433ux43e-ux443ux447ux440ux435ux436ux434ux435ux43dux438ux44f-ux432ux44bux441ux448ux435ux433ux43e-ux43eux431ux440ux430ux437ux43eux432ux430ux43dux438ux44f}
+
+\subsubsection{«НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ ТЕХНОЛОГИЧЕСКИЙ
+УНИВЕРСИТЕТ
+МИСИС»}\label{ux43dux430ux446ux438ux43eux43dux430ux43bux44cux43dux44bux439-ux438ux441ux441ux43bux435ux434ux43eux432ux430ux442ux435ux43bux44cux441ux43aux438ux439-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux447ux435ux441ux43aux438ux439-ux443ux43dux438ux432ux435ux440ux441ux438ux442ux435ux442-ux43cux438ux441ux438ux441}
+
+\subsubsection{Институт компьютерных наук Кафедра Инженерной
+кибернетики}\label{ux438ux43dux441ux442ux438ux442ux443ux442-ux43aux43eux43cux43fux44cux44eux442ux435ux440ux43dux44bux445-ux43dux430ux443ux43a-ux43aux430ux444ux435ux434ux440ux430-ux438ux43dux436ux435ux43dux435ux440ux43dux43eux439-ux43aux438ux431ux435ux440ux43dux435ux442ux438ux43aux438}
+
+\subsubsection{Лабораторная работа №1 по дисциплине «Современные
+интеллектуальные сетевые
+сервисы»}\label{ux43bux430ux431ux43eux440ux430ux442ux43eux440ux43dux430ux44f-ux440ux430ux431ux43eux442ux430-1-ux43fux43e-ux434ux438ux441ux446ux438ux43fux43bux438ux43dux435-ux441ux43eux432ux440ux435ux43cux435ux43dux43dux44bux435-ux438ux43dux442ux435ux43bux43bux435ux43aux442ux443ux430ux43bux44cux43dux44bux435-ux441ux435ux442ux435ux432ux44bux435-ux441ux435ux440ux432ux438ux441ux44b}
+
+Проектирование AI-сервиса на FastAPI
+
+\begin{quote}
+\textbf{Выполнил:} Студент группы МПИ-25-1 Харлашкина А.В.
+
+\textbf{Проверил:} Преподаватель Корнет М.Е.
+\end{quote}
+
+\subsubsection{\texorpdfstring{Оценка:
+}{Оценка: }}\label{ux43eux446ux435ux43dux43aux430}
+
+\begin{quote}
+Москва, 2026
+\end{quote}
+
+СОДЕРЖАНИЕ
+
+\hyperref[ux446ux435ux43bux44c-ux440ux430ux431ux43eux442ux44b]{1 Цель
+работы
+\hyperref[ux446ux435ux43bux44c-ux440ux430ux431ux43eux442ux44b]{3}}
+
+\hyperref[ux437ux430ux434ux430ux447ux438-ux440ux430ux431ux43eux442ux44b]{2
+Задачи работы
+\hyperref[ux437ux430ux434ux430ux447ux438-ux440ux430ux431ux43eux442ux44b]{3}}
+
+\hyperref[ux438ux441ux445ux43eux434ux43dux44bux435-ux434ux430ux43dux43dux44bux435]{3
+Исходные данные
+\hyperref[ux438ux441ux445ux43eux434ux43dux44bux435-ux434ux430ux43dux43dux44bux435]{3}}
+
+\hyperref[ux442ux440ux435ux431ux443ux435ux43cux44bux435-endpoints]{4
+Требуемые endpoints
+\hyperref[ux442ux440ux435ux431ux443ux435ux43cux44bux435-endpoints]{4}}
+
+\hyperref[ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-ux440ux430ux431ux43eux442ux44b]{5
+Выполнение работы
+\hyperref[ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-ux440ux430ux431ux43eux442ux44b]{5}}
+
+\hyperref[ux441ux43eux437ux434ux430ux43dux438ux435-ux43fux440ux43eux435ux43aux442ux430]{5.1
+Создание проекта
+\hyperref[ux441ux43eux437ux434ux430ux43dux438ux435-ux43fux440ux43eux435ux43aux442ux430]{5}}
+
+\hyperref[ux441ux43eux437ux434ux430ux43dux438ux435-fastapi-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{5.2
+Создание FastAPI-приложения
+\hyperref[ux441ux43eux437ux434ux430ux43dux438ux435-fastapi-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{5}}
+
+\hyperref[ux43fux435ux440ux432ux44bux439-endpoint-health]{5.2.1 Первый
+endpoint -- /health
+\hyperref[ux43fux435ux440ux432ux44bux439-endpoint-health]{6}}
+
+\hyperref[ux434ux43eux431ux430ux432ux43bux435ux43dux438ux435-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux438-ux43e-ux43cux43eux434ux435ux43bux438-endpoint-model-info]{5.2.2
+Добавление информации о модели: endpoint /model-info
+\hyperref[ux434ux43eux431ux430ux432ux43bux435ux43dux438ux435-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux438-ux43e-ux43cux43eux434ux435ux43bux438-endpoint-model-info]{7}}
+
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux432ux445ux43eux434ux43dux44bux445-ux434ux430ux43dux43dux44bux445]{5.2.3
+Проектирование входных данных
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux432ux445ux43eux434ux43dux44bux445-ux434ux430ux43dux43dux44bux445]{8}}
+
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux43cux43eux434ux435ux43bux438]{5.2.4
+Реализация модели
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux43cux43eux434ux435ux43bux438]{9}}
+
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-post-predict]{5.2.5
+Реализация POST /predict
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-post-predict]{10}}
+
+\hyperref[ux43eux440ux433ux430ux43dux438ux437ux430ux446ux438ux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux440ux435ux437ux443ux43bux44cux442ux430ux442ux43eux432]{5.2.6
+Организация хранения результатов
+\hyperref[ux43eux440ux433ux430ux43dux438ux437ux430ux446ux438ux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux440ux435ux437ux443ux43bux44cux442ux430ux442ux43eux432]{11}}
+
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictionsrequest_id]{5.2.7
+Реализация endpoint /predictions/\{request\_id\}
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictionsrequest_id]{12}}
+
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictions]{5.2.8
+Реализация endpoint /predictions
+\hyperref[ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictions]{14}}
+
+\hyperref[ux43fux440ux43eux432ux435ux440ux43aux430-ux431ux438ux437ux43dux435ux441-ux43eux433ux440ux430ux43dux438ux447ux435ux43dux438ux439]{5.2.9
+Проверка бизнес ограничений
+\hyperref[ux43fux440ux43eux432ux435ux440ux43aux430-ux431ux438ux437ux43dux435ux441-ux43eux433ux440ux430ux43dux438ux447ux435ux43dux438ux439]{16}}
+
+\hyperref[openapi-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442]{5.3
+OpenAPI как контракт
+\hyperref[openapi-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442]{18}}
+
+\hyperref[ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux435-api]{5.4
+Тестирование API
+\hyperref[ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux435-api]{18}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-api-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442ux430]{5.5
+Анализ API как контракта
+\hyperref[ux430ux43dux430ux43bux438ux437-api-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442ux430]{21}}
+
+\hyperref[ux440ux430ux437ux434ux435ux43bux435ux43dux438ux435-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f-ux43dux430-ux43cux43eux434ux443ux43bux438-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{5.6
+Разделение приложения на модули: архитектура приложения
+\hyperref[ux440ux430ux437ux434ux435ux43bux435ux43dux438ux435-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f-ux43dux430-ux43cux43eux434ux443ux43bux438-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{21}}
+
+\hyperref[ux432ux44bux432ux43eux434]{ВЫВОД
+\hyperref[ux432ux44bux432ux43eux434]{23}}
+
+\hyperref[ux43fux440ux438ux43bux43eux436ux435ux43dux438ux435-ux430-ux43fux43eux43bux43dux44bux439-ux43aux43eux434-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{Приложение
+А: Полный код приложения
+\hyperref[ux43fux440ux438ux43bux43eux436ux435ux43dux438ux435-ux430-ux43fux43eux43bux43dux44bux439-ux43aux43eux434-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f]{24}}
+
+\section{Цель
+работы}\label{ux446ux435ux43bux44c-ux440ux430ux431ux43eux442ux44b}
+
+Цель практической работы -- научиться проектировать программную
+архитектуру AI-сервиса, использующего модель машинного обучения,
+определить место API в общей ИИ-системе и реализовать REST API на
+FastAPI, изучив основные принципы программного взаимодействия между
+AI-моделью и внешними информационными системами.
+
+\section{Задачи
+работы}\label{ux437ux430ux434ux430ux447ux438-ux440ux430ux431ux43eux442ux44b}
+
+В ходе работы необходимо:
+
+\begin{itemize}
+\item
+  определить потребителей AI-сервиса;
+\item
+  определить формат входных и выходных данных;
+\item
+  спроектировать контур инференса;
+\item
+  разделить синхронные и асинхронные операции;
+\item
+  определить основные программные компоненты системы;
+\item
+  выбрать протоколы взаимодействия;
+\item
+  сформировать структурированный контракт REST API для AI-сервиса;
+\item
+  определить способы хранения результатов;
+\item
+  определить требования к логированию и наблюдаемости;
+\item
+  выявить основные архитектурные риски;
+\item
+  создать приложение на FastAPI и реализовать REST endpoints;
+\item
+  изучить методы GET и POST, передачу данных через JSON, использование
+  path- и query-параметров;
+\item
+  описывать входные и выходные схемы с помощью Pydantic и выполнять
+  валидацию входных данных;
+\item
+  возвращать корректные HTTP-коды и обрабатывать ошибки;
+\item
+  изучить автоматически создаваемую OpenAPI-документацию и
+  протестировать API через Swagger UI;
+\item
+  реализовать минимальный прототип API на FastAPI.
+\end{itemize}
+
+\section{Исходные
+данные}\label{ux438ux441ux445ux43eux434ux43dux44bux435-ux434ux430ux43dux43dux44bux435}
+
+Банк разрабатывает сервис агроскоринга. Система должна оценивать риск
+при работе с сельскохозяйственными предприятиями. Пользователь или
+другая информационная система передаёт сведения о хозяйстве:
+
+\begin{itemize}
+\item
+  Регион
+\item
+  площадь посевов;
+\item
+  тип основной культуры;
+\item
+  погодные показатели;
+\item
+  историю платежей;
+\item
+  количество просроченных платежей;
+\item
+  размер текущей задолженности.
+\end{itemize}
+
+На основании этих данных модель машинного обучения должна определить
+риск профиля предприятия. Результат должен содержать:
+
+\begin{itemize}
+\item
+  числовую оценку риска;
+\item
+  категорию риска;
+\item
+  рекомендацию оператору банка.
+\end{itemize}
+
+\begin{quote}
+\{
+
+" risk\_score ": 0.73 , " risk\_level": " high ", " recommendation ": ""
+
+\}
+\end{quote}
+
+Пример ответа:
+
+\begin{quote}
+1
+
+2
+
+3
+
+4
+
+5
+
+Листинг 1: Пример ответа /predict
+\end{quote}
+
+Сервис должен позволять:
+
+\begin{itemize}
+\item
+  проверить, работает ли API;
+\item
+  получить информацию о модели;
+\item
+  выполнить оценку риска одного хозяйства;
+\item
+  получить сохранённый результат прогноза;
+\item
+  получить несколько последних прогнозов;
+\item
+  корректно сообщать клиенту об ошибках.
+\end{itemize}
+
+Предполагается, что в будущем этим API будут пользоваться: CRM банка,
+веб-портал, мобильное приложение, внутренние банковские сервисы,
+BI-система.
+
+\section{Требуемые
+endpoints}\label{ux442ux440ux435ux431ux443ux435ux43cux44bux435-endpoints}
+
+API должен иметь следующие endpoints:
+
+Таблица №1 -- Список endpoints API
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2297}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3701}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4001}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Метод}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Endpoint}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Назначение}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+GET & /health & Проверка работоспособности API \\
+GET & /model-info & Информация о модели \\
+POST & /predict & Оценка риска хозяйства \\
+GET & /predictions/\{request\_id\} & Получение прогноза по ID \\
+GET & /predictions & Список прогнозов \\
+\end{longtable}
+
+\section{Выполнение
+работы}\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-ux440ux430ux431ux43eux442ux44b}
+
+\section{Создание
+проекта}\label{ux441ux43eux437ux434ux430ux43dux438ux435-ux43fux440ux43eux435ux43aux442ux430}
+
+Создадим каталог agro\_api/ (Рисунок 1). Также создадим виртуальное
+окружение и установим необходимые зависимости.
+
+\begin{figure}
+\centering
+\includegraphics[width=3.16948in,height=2.63575in]{media/image1.png}
+\caption{Рисунок 1 -- Структура проекта agro\_api}
+\end{figure}
+
+\section{Создание
+FastAPI-приложения}\label{ux441ux43eux437ux434ux430ux43dux438ux435-fastapi-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f}
+
+Создадим файл main.py и добавим в него объект app = FastAPI(), который
+представляет наше API-приложение.
+
+\begin{figure}
+\centering
+\includegraphics[width=6.46606in,height=1.31714in]{media/image2.png}
+\caption{Рисунок 2 -- Создание объекта app}
+\end{figure}
+
+\section{Первый endpoint --
+/health}\label{ux43fux435ux440ux432ux44bux439-endpoint-health}
+
+Создадим Endpoint /health (Рисунок 3).
+
+\includegraphics[width=6.26328in,height=1.48235in]{media/image3.png}
+
+Рисунок 3 -- Создание Endpoint /health
+
+Откроем http://127.0.0.1:8000/health. Получили результат: \{" status ":
+"ok"\} (Рисунок 4).
+
+\begin{figure}
+\centering
+\includegraphics[width=4.08675in,height=1.87936in]{media/image4.png}
+\caption{Рисунок 4 -- Результат /health}
+\end{figure}
+
+Теперь откроем http://127.0.0.1:8000/docs. FastAPI автоматически создаёт
+интерактивную документацию API. В ней появился GET /health (Рисунок 5).
+
+Также FastAPI автоматически формирует описание API по стандарту OpenAPI.
+Откроем http: //127.0.0.1:8000/openapi.json и увидим JSON-документ,
+описывающий API (Рисунок 6).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.9983in,height=6.43936in]{media/image5.png}
+\caption{Рисунок 5 -- Результат в Swagger UI}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.41545in,height=1.90501in]{media/image6.png}
+\caption{Рисунок 6 -- Фрагмент OpenAPI-спецификации}
+\end{figure}
+
+\section{Добавление информации о модели: endpoint
+/model-info}\label{ux434ux43eux431ux430ux432ux43bux435ux43dux438ux435-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux438-ux43e-ux43cux43eux434ux435ux43bux438-endpoint-model-info}
+
+Теперь создадим endpoint GET /model-info (Рисунок 7).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.61895in,height=2.60987in]{media/image7.png}
+\caption{Рисунок 7 -- Создание Endpoint /model-info}
+\end{figure}
+
+Ответ на впорос чем /health отличается от /model-info?
+
+/health -- техническая проверка доступности API: сервис отвечает
+\{"status": "ok"\}.
+
+/model-info -- описание используемой модели: имя, версия, тип и
+состояние готовности. То есть health характеризует работоспособность
+сервиса, а model-info -- состояние и метаданные модели.
+
+\section{Проектирование входных
+данных}\label{ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux432ux445ux43eux434ux43dux44bux445-ux434ux430ux43dux43dux44bux445}
+
+Для выполнения прогноза клиент должен передать сведения о хозяйстве.
+FastAPI должен проверить эти данные до передачи модели. FastAPI
+использует Pydantic для описания структуры данных. Поэтому добавим
+импорт Pydantic и создадим модель FarmRequest (Рисунок 8).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.03104in,height=1.95824in]{media/image8.png}
+\caption{Рисунок 8 -- Создание модели FarmRequest}
+\end{figure}
+
+Пояснения: area\_ha: float = Field(gt=0) означает тип данных float,
+значение строго больше 0. Если же клиент передаст: area\_ha = -200, то
+FastAPI обнаружит ошибку ещё до запуска функции инференса.
+
+\section{Реализация
+модели}\label{ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux43cux43eux434ux435ux43bux438}
+
+В данной работе вместо модели машинного обучения будем использовать
+простую функцию, реализующую расчёт риска по некоторым финансовым и
+отраслевым показателям. Добавим функцию расчета риска (Рисунок 9).
+
+\begin{figure}
+\centering
+\includegraphics[width=4.41705in,height=3.25109in]{media/image9.png}
+\caption{Рисунок 9 -- Функция расчета риска}
+\end{figure}
+
+Также создадим функции risk\_level (Рисунок 10) и recommendation
+(Рисунок 11):
+
+\begin{itemize}
+\item
+  risk\_level преобразует числовой risk\_score в понятную категорию
+  риска: low, medium или high.
+\item
+  recommendation формирует рекомендацию для банка в зависимости от
+  полученного уровня риска.
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=5.1005in,height=1.31694in]{media/image10.png}
+\caption{Рисунок 10 -- Функция risk\_level}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=5.1005in,height=1.27761in]{media/image10.png}
+\caption{Рисунок 11 -- Функция recommendation}
+\end{figure}
+
+\section{Реализация POST
+/predict}\label{ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-post-predict}
+
+Создадим Endpoint POST /predict (Рисунок 12). Для этого импортуруем
+uuid. Данный endpoint является основным endpoint разработанного
+AI-сервиса, поскольку именно через него передаются данные о хозяйстве
+для выполнения оценки кредитного риска.
+
+Также реализуем добавление кода ответа в POST /predict. Какой статус
+корректнее для инференса --- «200 OK» или «201 Created»? В данной
+реализации выбран 200 OK. Endpoint выполняет инференс и возвращает
+результат операции; отдельный ресурс с самостоятельным жизненным циклом
+здесь не создаётся. Важно последовательно использовать выбранную
+семантику.
+
+Для возвращаемого результата создадим PredictionResponse, так как
+внешняя система должна получать ожидаемую структуру данных независимо от
+внут-реннего устройства модели.
+
+\begin{figure}
+\centering
+\includegraphics[width=6.23501in,height=4.80675in]{media/image11.png}
+\caption{Рисунок 12 -- Endpoint POST /predict}
+\end{figure}
+
+Такое разделение позволяет отделить HTTP-интерфейс от бизнес-логики и
+расчёта риска, что упрощает тестирование и дальнейшую замену
+демонстрационной модели на полноценную ML-модель.
+
+Проверим через Swagger: откроем /docs, выберем POST /predict и введем
+тестовый запрос (Рисунок 13).
+
+\begin{figure}
+\centering
+\includegraphics[width=3.22276in,height=2.49526in]{media/image12.png}
+\caption{Рисунок 13 -- Тестовый запрос}
+\end{figure}
+
+После чего получим результат (Рисунок 14).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.65258in,height=4.72225in]{media/image13.png}
+\caption{Рисунок 14 -- Результат в Swagger UI: Успешный POST /predict}
+\end{figure}
+
+\section{Организация хранения
+результатов}\label{ux43eux440ux433ux430ux43dux438ux437ux430ux446ux438ux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux440ux435ux437ux443ux43bux44cux442ux430ux442ux43eux432}
+
+Создадим временное хранилище в оперативной памяти в файле storage.py
+(Рисунок 15). Класс PredictionStorage использует словарь \_predictions,
+где ключом является request\_id, а значением -- объект
+PredictionResponse.
+
+Метод save() сохраняет результат прогнозирования, get() находит
+результат по идентификатору, а list() возвращает список всех сохранённых
+прогнозов. Объект storage создаётся при запуске приложения и
+используется другими компонентами сервиса.
+
+Хранилище временное: после перезапуска приложения все сохранённые данные
+теряются.
+
+\begin{figure}
+\centering
+\includegraphics[width=5.92289in,height=3.85221in]{media/image14.png}
+\caption{Рисунок 15 -- Реализация хранилища}
+\end{figure}
+
+\section{Реализация endpoint
+/predictions/\{request\_id\}}\label{ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictionsrequest_id}
+
+Уникальный request\_id необходим для того, чтобы каждый результат
+прогнозирования можно было однозначно идентифицировать и получить с
+помощью endpoint GET /predictions/\{request\_id\}. Реализуем данный
+эндпоинт (Рисунок 16). И посмотрим результат в Swagger (Рисунок 17).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.73079in,height=1.80938in]{media/image15.png}
+\caption{Рисунок 16 -- Реализация endpoint /predictions/\{request\_id\}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.36329in,height=4.50407in]{media/image16.png}
+\caption{Рисунок 17 -- Результат в Swagger}
+\end{figure}
+
+Обратим внимание на ошибку 422. При передаче некорректных данных FastAPI
+должен вернуть ошибку валидации (Рисунок 18).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.52419in,height=3.90806in]{media/image17.png}
+\caption{Рисунок 18 -- Пример передачи некорректных данных: ошибка 422}
+\end{figure}
+
+Почему такой запрос не должен доходить до ML-модели?
+
+Pydantic выполняет структурную валидацию до вызова функции predict:
+проверяет типы, обязательные поля и ограничения Field. Например,
+area\_ha должен быть больше нуля. При нарушении FastAPI возвращает 422,
+поэтому инференс не запускается для некорректных входных данных.
+
+Также попробуем ввести несуществующий request\_id (Рисунок 19).
+
+\begin{figure}
+\centering
+\includegraphics[width=5.99333in,height=4.12364in]{media/image18.png}
+\caption{Рисунок 19 -- Пример передачи несуществующих данных: ошибка
+404}
+\end{figure}
+
+\section{Реализация endpoint
+/predictions}\label{ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-endpoint-predictions}
+
+Теперь реализуем получение списка прогнозов (Рисунок 19). Endpoint
+поддерживает два query-параметра: limit и risk\_level.
+
+\begin{figure}
+\centering
+\includegraphics[width=6.61151in,height=2.26419in]{media/image19.png}
+\caption{Рисунок 20 -- Реализация endpoint /predictions}
+\end{figure}
+
+Параметр limit задаёт максимальное количество возвращаемых прогнозов.
+Для него устанавливаются ограничения от 1 до 100. Это позволяет избежать
+некорректных запросов и получения слишком большого количества данных.
+
+Параметр risk\_level используется для фильтрации прогнозов по уровню
+риска: low, medium или high. Если параметр не указан, возвращаются все
+сохранённые прогнозы.
+
+Таким образом, можно выполнить запрос:
+
+\begin{itemize}
+\item
+  /predictions?limit=2: получить максимум 2 прогноза (Рисунок 20);
+\item
+  /predictions?risk\_level=high: получить только прогнозы с высоким
+  риском (Рисунок 21);
+\item
+  /predictions?limit=2\&risk\_level=high: получить до 2 прогнозов с
+  высоким риском (Рисунок 22).
+\end{itemize}
+
+Получение данных выполняется через метод list() временного хранилища,
+после чего при необходимости применяется фильтрация по уровню риска и
+ограничение количества результатов.
+
+\begin{figure}
+\centering
+\includegraphics[width=6.23084in,height=2.99215in]{media/image20.png}
+\caption{Рисунок 21 -- Результат для /predictions?limit=2}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=5.98327in,height=2.86077in]{media/image21.png}
+\caption{Рисунок 22 -- Результат для /predictions?risk\_level=high}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.06127in,height=2.94014in]{media/image22.png}
+\caption{Рисунок 23 -- результат для
+/predictions?limit=2\&risk\_level=high}
+\end{figure}
+
+При некорректном значении limit, например limit=1000, FastAPI возвращает
+ошибку 422 Unprocessable Entity благодаря валидации query-параметра
+(Рисунок 23).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.88233in,height=2.80639in]{media/image23.png}
+\caption{Рисунок 24 -- Некорректный limit}
+\end{figure}
+
+\section{\texorpdfstring{Проверка бизнес ограничений
+}{Проверка бизнес ограничений }}\label{ux43fux440ux43eux432ux435ux440ux43aux430-ux431ux438ux437ux43dux435ux441-ux43eux433ux440ux430ux43dux438ux447ux435ux43dux438ux439}
+
+Pydantic проверяет формат данных, но некоторые ошибки невозможно
+определить только по типу значения, иногда необходима дополнительная
+проверка некоторых ограничений. Поэтому создадим множество допустимых
+регионов (Рисунок 24). Также добавим валидацию в /predict (Рисунок 25).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.17406in,height=1.81127in]{media/image24.png}
+\caption{Рисунок 25 -- Множество допустимых регионов}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.69831in,height=1.31721in]{media/image25.png}
+\caption{Рисунок 26 -- Валидация региона в /predict}
+\end{figure}
+
+Посмотрим на результат в Swagger при запросе с неизвестным регионом
+(Рисунок 26).
+
+\begin{figure}
+\centering
+\includegraphics[width=6.85873in,height=3.35272in]{media/image26.png}
+\caption{Рисунок 27 -- Результат с неизвестным регионом: ошибка 400}
+\end{figure}
+
+\section{OpenAPI как
+контракт}\label{openapi-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442}
+
+Откроем Swagger UI (Рисунок 27), в документации автоматически
+отображаются:
+
+\begin{itemize}
+\item
+  FarmRequest
+\item
+  PredictionResponse
+\item
+  типы данных
+\item
+  обязательные поля
+\item
+  ограничения
+\item
+  HTTP endpoints
+\item
+  HTTP methods
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.12838in,height=4.92999in]{media/image27.png}
+\caption{Рисунок 28 -- Скриншот Swagger UI}
+\end{figure}
+
+\section{Тестирование
+API}\label{ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux435-api}
+
+Последовательно выполним запросы и заполним таблицу тест-кейсов (Таблица
+№2).
+
+Таблица №2 -- Таблица тест-кейсов
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0563}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2817}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1409}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1549}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3662}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{№}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{Запрос}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{Ожидаемый HTTP-код}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Полученный код}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{Результат}
+\end{quote}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+1
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+GET /health
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"status": "ok"
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+2
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+GET /model-info
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"model\_name": "agro-risk-model",
+
+"model\_version": "1.0",
+
+"model\_type": "risk-scoring",
+
+"status": "ready"
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+3
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+корректный POST /predict
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200/201
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200/201
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"request\_id": "ec8b3bcc-bccc-4794-865d-51511389cf78",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.9,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+4
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+area\_ha = -100
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+422
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+422
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"detail": {[}
+
+\{
+
+"type": "greater\_than",
+
+"loc": {[}
+
+"body",
+
+"area\_ha"
+
+{]},
+
+"msg": "Input should be greater than 0",
+
+"input": -100,
+
+"ctx": \{
+
+"gt": 0
+
+\}
+
+\}
+
+{]}
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+5
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+неизвестный регион
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+400
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+400
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"detail": "Unknown region: Moscow. Allowed regions:
+{[}\textquotesingle Krasnodar\textquotesingle,
+\textquotesingle Rostov\textquotesingle,
+\textquotesingle Stavropol\textquotesingle{]}"
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+6
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+существующий request\_id
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"request\_id": "ec8b3bcc-bccc-4794-865d-51511389cf78",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.9,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\}
+\end{quote}
+\end{minipage} \\
+\end{longtable}
+
+Продолжение Таблицы №2
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0563}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2817}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1409}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1549}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3662}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{№}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+\textbf{Запрос}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{Ожидаемый HTTP-код}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\begin{quote}
+\textbf{Полученный код}
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+\textbf{Результат}
+\end{quote}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+7
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+неизвестный request\_id
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+404
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+404
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+\{
+
+"detail": "Prediction not found"
+
+\}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+8
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+limit = 2
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+{[}
+
+\{
+
+"request\_id": "80f7160b-9ea5-41f8-8759-51e04143f608",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.9,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\},
+
+\{
+
+"request\_id": "11a3831e-5a02-45e3-b0e8-79c69d9d0aaa",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.7,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\}
+
+{]}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+9
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+risk\_level = high
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+200
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+{[}
+
+\{
+
+"request\_id": "80f7160b-9ea5-41f8-8759-51e04143f608",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.9,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\},
+
+\{
+
+"request\_id": "11a3831e-5a02-45e3-b0e8-79c69d9d0aaa",
+
+"farm\_id": "FARM-001",
+
+"risk\_score": 0.7,
+
+"risk\_level": "high",
+
+"recommendation": "Высокий риск. Требуется ручное рассмотрение",
+
+"model\_version": "1.0"
+
+\}
+
+{]}
+\end{quote}
+\end{minipage} \\
+\begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+10
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+\begin{quote}
+limit = -5
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+422
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\centering
+\begin{quote}
+422
+\end{quote}
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Please correct the following validation errors and try again.
+
+\begin{itemize}
+\item
+  For \textquotesingle limit\textquotesingle: Value must be greater than
+  or equal to 1.
+\end{itemize}
+\end{minipage} \\
+\end{longtable}
+
+\section{Анализ API как
+контракта}\label{ux430ux43dux430ux43bux438ux437-api-ux43aux430ux43a-ux43aux43eux43dux442ux440ux430ux43aux442ux430}
+
+Для каждого endpoint заполним таблицу (Таблица №5).
+
+Таблица №5 -- Анализ API-контракта
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1673}}
+  >{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0935}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1633}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2791}}
+  >{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0911}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2057}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Endpoint}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Method}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Input}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Output}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Success}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Ошибки}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+/health & GET & --- & HealthResponse -- поле status со значением "ok" &
+200 & 500 при необработанном внутреннем сбое \\
+/model-info & GET & --- & ModelInfoResponse -- model\_name,
+model\_version, model\_type, status & 200 & 500 при необработанном
+внутреннем сбое \\
+/predict & POST & FarmRequest & PredictionResponse -- request\_id,
+farm\_id, risk\_score, risk\_level, recommendation, model\_version & 200
+& 400, 422, 503 \\
+/predictions/\{id\} & GET & request\_id & PredictionResponse & 200 &
+404 \\
+/predictions & GET & query params: limit, risk\_level &
+list{[}PredictionResponse{]} & 200 & 400, 422 \\
+\end{longtable}
+
+Статус POST /predict в данном репозитории -- именно 200 OK, поскольку
+так задан декоратор маршрута. Код 500 обозначает потенциальный
+необработанный сбой, а не отдельную явно реализованную ветку. Неверный
+risk\_level даёт 400, так как проверяется вручную в обработчике.
+
+Проведённый анализ API-контракта показывает, что сервис использует
+REST-подход и HTTP-методы GET и POST. Для передачи данных
+прогнозирования используется JSON, а структура входных и выходных данных
+определяется Pydantic-моделями. Для получения конкретного прогноза
+используется path-параметр request\_id, а для фильтрации списка
+прогнозов -- query-параметры limit и risk\_level.
+
+Корректность входных данных проверяется до выполнения бизнес-логики. При
+нарушении структурных ограничений возвращается HTTP 422, при неизвестном
+регионе -- HTTP 400, а при отсутствии запрошенного прогноза -- HTTP 404.
+Успешное выполнение запросов возвращает HTTP 200.
+
+\section{Разделение приложения на модули: архитектура
+приложения}\label{ux440ux430ux437ux434ux435ux43bux435ux43dux438ux435-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f-ux43dux430-ux43cux43eux434ux443ux43bux438-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f}
+
+Разработан учебный REST API агроскоринга на FastAPI. Его потребители --
+CRM банка, веб-портал, мобильное приложение, внутренние банковские
+сервисы и BI-система. Клиенты отправляют сведения о хозяйстве в JSON по
+HTTP и получают числовую оценку риска, категорию риска и рекомендацию.
+FastAPI автоматически публикует контракт OpenAPI по адресу /openapi.json
+и интерфейс Swagger UI по адресу /docs.
+
+В процесесе выполнения практической работы код был приведён к модульной
+структуре:
+
+\begin{itemize}
+\item
+  agro\_api/main.py: FastAPI-приложение и HTTP endpoints;
+\item
+  agro\_api/schemas.py: Pydantic-модели;
+\item
+  agro\_api/model.py: детерминированная функция расчёта risk\_score;
+\item
+  agro\_api/services.py: бизнес-логика и postprocessing;
+\item
+  agro\_api/storage.py: временное in-memory хранилище;
+\item
+  tests/test\_api.py: автоматические тесты API.
+\end{itemize}
+
+Прогноз выполняется синхронно в рамках POST /predict. Сначала данные
+проходят валидацию Pydantic, затем проверяются регион и готовность
+модели. После расчёта и постобработки результат получает request\_id,
+сохраняется и возвращается клиенту в формате PredictionResponse. Такая
+декомпозиция уменьшает связанность и упрощает дальнейшую замену правил
+расчёта на реальную ML-модель и временного хранилища на БД.
+
+\section{ВЫВОД}\label{ux432ux44bux432ux43eux434}
+
+Компонентная схема архитектуры (Рисунок 29) показывает клиентов,
+HTTP-слой FastAPI, Pydantic-схемы, сервисную логику, функцию расчёта
+риска и хранилище. REST API служит стабильной границей между внешними
+банковскими системами и расчётом риска: принимает и проверяет данные,
+запускает инференс, документирует формат результата и сообщает об
+ошибках через HTTP-коды.
+
+\begin{figure}
+\centering
+\includegraphics[width=6.48854in,height=2.89245in]{media/image28.png}
+\caption{Рисунок 29 --Компонентная схема архитектуры}
+\end{figure}
+
+Текущая модель является учебным правилом, а хранилище работает только в
+памяти процесса: результаты исчезают после перезапуска. В реализации
+storage.list() записи идут в порядке добавления, поэтому limit выбирает
+первые сохранённые прогнозы, а не самые новые. Для промышленной системы
+понадобятся постоянное хранилище, защита доступа, аудит и обученная
+модель с контролем качества.
+
+Таким образом, в данной практической работе реализован и проверен REST
+API для AI-сервиса оценки риска. FastAPI предоставляет HTTP-интерфейс и
+OpenAPI-контракт, Pydantic обеспечивает структурную валидацию,
+бизнес-валидация защищает доменные ограничения, а request\_id позволяет
+получать сохранённый результат. Рефакторинг разделяет HTTP-слой, схемы,
+модель, сервисную логику и хранилище. REST API в AI-системе выступает
+контрактом между клиентом и инференсным сервисом.
+
+\section{Приложение А: Полный код
+приложения}\label{ux43fux440ux438ux43bux43eux436ux435ux43dux438ux435-ux430-ux43fux43eux43bux43dux44bux439-ux43aux43eux434-ux43fux440ux438ux43bux43eux436ux435ux43dux438ux44f}
+
+Полный код приложения находится в репозитории:
+
+\url{https://github.com/Shynuaa/MINS_labs}
+
+\end{document}
